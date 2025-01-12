@@ -163,5 +163,12 @@ The core functionality of the project is:
 
 ## **License**
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is open-source and distributed under the following conditions:
+
+1. **Personal Use**: You are free to use, modify, and share this project for personal, educational, or non-commercial purposes.
+2. **Attribution**: Any derivative works or distributions must include credit to the original authors of the project: **Yahya Elmokhtari**, **Souhail ELMAHDANI**, **Yassin Riahi**, and **Amin Boulzmin**.
+3. **Non-Commercial Use**: Commercial use of this project is strictly prohibited without prior written consent from the authors.
+4. **No Warranty**: This project is provided "as is" without any warranties or guarantees. The authors are not liable for any issues arising from its use.
+
+For further details or permissions, contact the project team.
 
