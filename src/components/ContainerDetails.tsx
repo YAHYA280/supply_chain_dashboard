@@ -15,6 +15,8 @@ import {
   TableCell,
   TableBody,
   Paper,
+  Chip,
+  Divider,
 } from "@mui/material";
 import Map from "./Map";
 import Chart from "./Chart";
@@ -25,31 +27,44 @@ interface Props {
 
 export default function ContainerDetails({ container }: Props) {
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={4}>
       {/* Left Column: Map + Shipping Info */}
       <Grid item xs={12} md={6}>
         {/* Map with container coords */}
-        <Map lat={container.location.lat} lon={container.location.lon} />
+        <Card sx={{ overflow: "hidden", height: 300 }}>
+          <Map lat={container.location.lat} lon={container.location.lon} />
+        </Card>
 
         {/* Shipping details card */}
-        <Card sx={{ mt: 3 }}>
+        <Card sx={{ mt: 3, p: 2, boxShadow: 3 }}>
           <CardContent>
-            <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
+            <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
               Shipping Details
             </Typography>
-            <Typography variant="body1">
+            <Box sx={{ mb: 2 }}>
+              <Chip
+                label={container.status}
+                color={
+                  container.status === "In Transit"
+                    ? "primary"
+                    : container.status === "Delayed"
+                    ? "warning"
+                    : "success"
+                }
+                sx={{ fontWeight: "bold", fontSize: "0.9rem" }}
+              />
+            </Box>
+            <Divider sx={{ mb: 2 }} />
+            <Typography variant="body1" sx={{ mb: 1 }}>
               <strong>Company:</strong> {container.shippingCompany}
             </Typography>
-            <Typography variant="body1">
-              <strong>Status:</strong> {container.status}
-            </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" sx={{ mb: 1 }}>
               <strong>Departure Port:</strong> {container.departurePort}
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" sx={{ mb: 1 }}>
               <strong>Arrival Port:</strong> {container.arrivalPort}
             </Typography>
-            <Typography variant="body1">
+            <Typography variant="body1" sx={{ mb: 1 }}>
               <strong>ETA:</strong> {new Date(container.eta).toLocaleString()}
             </Typography>
           </CardContent>
@@ -58,25 +73,40 @@ export default function ContainerDetails({ container }: Props) {
 
       {/* Right Column: Chart + Table */}
       <Grid item xs={12} md={6}>
-        <Chart history={container.history} />
+        {/* Chart for historical data */}
+        <Card sx={{ p: 2, boxShadow: 3 }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
+            Temperature & Humidity Trends
+          </Typography>
+          <Chart history={container.history} />
+        </Card>
 
-        {/* Table of on-chain data */}
+        {/* Table of on-chain sensor readings */}
         <Box sx={{ mt: 3 }}>
-          <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
             Sensor Readings (On-Chain)
           </Typography>
-          <TableContainer component={Paper}>
+          <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell>Time</TableCell>
-                  <TableCell>Temperature (°C)</TableCell>
-                  <TableCell>Humidity (%)</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>Time</TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>
+                    Temperature (°C)
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>
+                    Humidity (%)
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {container.history.map((entry) => (
-                  <TableRow key={entry.time}>
+                {container.history.map((entry, idx) => (
+                  <TableRow
+                    key={idx}
+                    sx={{
+                      "&:nth-of-type(odd)": { backgroundColor: "#f9f9f9" },
+                    }}
+                  >
                     <TableCell>{entry.time}</TableCell>
                     <TableCell>{entry.temperature}</TableCell>
                     <TableCell>{entry.humidity}</TableCell>
