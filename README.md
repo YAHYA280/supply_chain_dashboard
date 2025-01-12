@@ -18,7 +18,7 @@ The core functionality of the project is:
 
 ### **Main Components**
 
-1. **HomePage** (`src/components/HomePage.tsx`)
+1. **HomePage** 
    - Displays a welcome message.
    - Provides an overview of the project and its functionality.
    - Introduces the team members.
