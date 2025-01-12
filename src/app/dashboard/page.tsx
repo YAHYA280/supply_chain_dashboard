@@ -1,157 +1,107 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { fetchSensorData, OnChainSensorData } from "@/utils/blockchain";
+import Dashboard from "@/components/Dashboard";
+import { ContainerData } from "@/types/container";
 import {
-  Container,
   Box,
+  CircularProgress,
   Typography,
   Card,
   CardContent,
   Button,
-  CircularProgress,
 } from "@mui/material";
-import Dashboard from "@/components/Dashboard";
-import { ContainerData } from "@/types/container";
+
+const singleContainer: ContainerData = {
+  id: "CONT-123456",
+  shippingCompany: "Maersk",
+  status: "In Transit",
+  departurePort: "Mumbai, India",
+  arrivalPort: "New York, USA",
+  eta: "2025-01-20T10:00:00Z",
+  location: { lat: 40.7128, lon: -74.006 },
+  history: [],
+};
 
 export default function DashboardPage() {
-  const [containers, setContainers] = useState<ContainerData[]>([]);
+  const [container, setContainer] = useState<ContainerData>(singleContainer);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    async function loadSensorData() {
       try {
-        const res = await fetch("/api/containers");
-        if (!res.ok) {
-          throw new Error(`Failed to fetch containers: ${res.statusText}`);
-        }
-        const data = await res.json();
-        setContainers(data);
+        const sensorEntries: OnChainSensorData[] = await fetchSensorData();
+        const updatedHistory = sensorEntries.map((entry) => ({
+          time: entry.timestamp.toLocaleString(),
+          temperature: entry.temperatureC,
+          humidity: entry.humidity,
+        }));
+        setContainer((prev) => ({
+          ...prev,
+          history: updatedHistory,
+        }));
       } catch (err) {
-        console.error("Error fetching containers:", err);
-        setError("Unable to load container data. Please try again later.");
+        console.error(err);
+        setError("Failed to fetch sensor data from the blockchain.");
       } finally {
         setLoading(false);
       }
-    };
-    fetchData();
+    }
+    loadSensorData();
   }, []);
 
-  // Loading State
   if (loading) {
     return (
       <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
         minHeight="100vh"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
         bgcolor="grey.100"
       >
-        <Card
-          sx={{
-            p: 4,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
-          <CircularProgress sx={{ mb: 2, color: "primary.main" }} />
-          <Typography variant="h6" component="p" sx={{ fontWeight: 600 }}>
-            Loading containers...
-          </Typography>
+        <Card>
+          <CardContent sx={{ p: 4, textAlign: "center" }}>
+            <CircularProgress sx={{ mb: 2 }} />
+            <Typography>Loading container data from blockchain...</Typography>
+          </CardContent>
         </Card>
       </Box>
     );
   }
 
-  // Error State
   if (error) {
     return (
       <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
         minHeight="100vh"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
         bgcolor="grey.100"
       >
-        <Card sx={{ maxWidth: 400, p: 3, textAlign: "center" }}>
-          <Typography
-            variant="h5"
-            component="h2"
-            color="error"
-            sx={{ fontWeight: "bold", mb: 2 }}
-          >
-            Error
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-            {error}
-          </Typography>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => location.reload()}
-          >
-            Retry
-          </Button>
-        </Card>
-      </Box>
-    );
-  }
-
-  // No Data State
-  if (containers.length === 0) {
-    return (
-      <Box
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-        minHeight="100vh"
-        bgcolor="grey.100"
-      >
-        <Card sx={{ maxWidth: 500, p: 3, textAlign: "center" }}>
-          <Typography
-            variant="h5"
-            component="h2"
-            sx={{ fontWeight: "bold", mb: 2 }}
-          >
-            No container data available
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            It looks like there’s no container information to display. Please
-            check back later.
-          </Typography>
-        </Card>
-      </Box>
-    );
-  }
-
-  // Success: Show Dashboard
-  return (
-    <Box sx={{ minHeight: "100vh", bgcolor: "grey.100", pb: 6 }}>
-      {/* Page Header */}
-      <Container sx={{ pt: 4, pb: 2 }}>
-        <Typography
-          variant="h3"
-          component="h1"
-          sx={{ fontWeight: "bold", mb: 1 }}
-        >
-          Dashboard
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Select a container to view its current location, shipping details, and
-          temperature/humidity logs.
-        </Typography>
-      </Container>
-
-      {/* Main "card" for the dashboard content */}
-      <Container sx={{ mt: 3 }}>
-        <Card sx={{ p: 3 }}>
-          <CardContent>
-            <Dashboard containers={containers} />
+        <Card>
+          <CardContent sx={{ p: 4, textAlign: "center" }}>
+            <Typography color="error" variant="h6" sx={{ mb: 2 }}>
+              {error}
+            </Typography>
+            <Button variant="outlined" onClick={() => location.reload()}>
+              Retry
+            </Button>
           </CardContent>
         </Card>
-      </Container>
+      </Box>
+    );
+  }
+
+  // Success
+  return (
+    <Box sx={{ p: 4 }}>
+      <Typography variant="h4" sx={{ mb: 3, fontWeight: "bold" }}>
+        Single Container Dashboard
+      </Typography>
+      {/* Dashboard expects an array of containers, pass [container] */}
+      <Dashboard containers={[container]} />
     </Box>
   );
 }

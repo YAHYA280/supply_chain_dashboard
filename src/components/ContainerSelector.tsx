@@ -1,8 +1,8 @@
+// File: src/components/ContainerSelector.tsx
 "use client";
 
-import React from "react";
 import { ContainerData } from "@/types/container";
-import { Stack, Button } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 
 interface Props {
   containers: ContainerData[];

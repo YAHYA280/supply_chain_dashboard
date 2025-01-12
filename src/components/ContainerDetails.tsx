@@ -1,19 +1,19 @@
+// File: src/components/ContainerDetails.tsx
 "use client";
 
-import React from "react";
 import { ContainerData } from "@/types/container";
 import {
   Grid,
-  Box,
-  Typography,
   Card,
   CardContent,
-  Table,
-  TableBody,
-  TableCell,
+  Typography,
+  Box,
   TableContainer,
+  Table,
   TableHead,
   TableRow,
+  TableCell,
+  TableBody,
   Paper,
 } from "@mui/material";
 import Map from "./Map";
@@ -28,10 +28,10 @@ export default function ContainerDetails({ container }: Props) {
     <Grid container spacing={3}>
       {/* Left Column: Map + Shipping Info */}
       <Grid item xs={12} md={6}>
-        {/* MAP */}
+        {/* Map with container coords */}
         <Map lat={container.location.lat} lon={container.location.lon} />
 
-        {/* Shipping Info Card */}
+        {/* Shipping details card */}
         <Card sx={{ mt: 3 }}>
           <CardContent>
             <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
@@ -56,14 +56,14 @@ export default function ContainerDetails({ container }: Props) {
         </Card>
       </Grid>
 
-      {/* Right Column: Chart + Logs */}
+      {/* Right Column: Chart + Table */}
       <Grid item xs={12} md={6}>
         <Chart history={container.history} />
 
-        {/* Historical Log Table */}
+        {/* Table of on-chain data */}
         <Box sx={{ mt: 3 }}>
           <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
-            Full Temperature / Humidity Log
+            Sensor Readings (On-Chain)
           </Typography>
           <TableContainer component={Paper}>
             <Table size="small">
@@ -77,9 +77,7 @@ export default function ContainerDetails({ container }: Props) {
               <TableBody>
                 {container.history.map((entry) => (
                   <TableRow key={entry.time}>
-                    <TableCell>
-                      {new Date(entry.time).toLocaleString()}
-                    </TableCell>
+                    <TableCell>{entry.time}</TableCell>
                     <TableCell>{entry.temperature}</TableCell>
                     <TableCell>{entry.humidity}</TableCell>
                   </TableRow>

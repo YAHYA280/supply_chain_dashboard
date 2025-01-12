@@ -1,10 +1,11 @@
+// File: src/components/Dashboard.tsx
 "use client";
 
-import React, { useState } from "react";
 import { ContainerData } from "@/types/container";
-import { Box, Typography, Paper } from "@mui/material";
+import { useState } from "react";
 import ContainerSelector from "./ContainerSelector";
 import ContainerDetails from "./ContainerDetails";
+import { Box, Typography, Paper } from "@mui/material";
 
 interface DashboardProps {
   containers: ContainerData[];
@@ -16,22 +17,20 @@ export default function Dashboard({ containers }: DashboardProps) {
 
   return (
     <Box>
-      {/* Title / Description could be handled in your DashboardPage, or here */}
-      <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
+      <Typography variant="h6" sx={{ fontWeight: "bold", mb: 1 }}>
         Container Overview
       </Typography>
       <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-        Select a container to view its location and shipping details.
+        Select a container to see location & shipping details.
       </Typography>
 
-      {/* 1) Selector of containers */}
+      {/* Container selection buttons */}
       <ContainerSelector
         containers={containers}
         selectedIndex={selectedIndex}
         onSelect={setSelectedIndex}
       />
 
-      {/* 2) Container Details (Map, Chart, Info) - wrapped in Paper for a card look */}
       <Paper sx={{ mt: 3, p: 2 }} elevation={3}>
         <ContainerDetails container={selectedContainer} />
       </Paper>
