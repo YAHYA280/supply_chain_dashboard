@@ -1,9 +1,9 @@
+import "./tailwind.css";
 import Navbar from "@/components/Navbar";
-import "./styles/global.css";
 
 export const metadata = {
-  title: "Supply Chain Dashboard",
-  description: "Monitor temperature, humidity, and GPS location in real time.",
+  title: "Container Tracking",
+  description: "Track containers in real-time with Next.js and Leaflet",
 };
 
 export default function RootLayout({
@@ -13,9 +13,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-gray-100 min-h-screen flex flex-col">
         <Navbar />
-        {children}
+        {/* The children pages (Home, Dashboard) will appear below the navbar */}
+        <main className="flex-1">{children}</main>
       </body>
     </html>
   );

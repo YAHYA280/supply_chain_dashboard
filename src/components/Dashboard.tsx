@@ -1,18 +1,40 @@
 "use client";
 
-import Map from "@/components/Map";
+import React, { useState } from "react";
+import { ContainerData } from "@/types/container";
+import { Box, Typography, Paper } from "@mui/material";
+import ContainerSelector from "./ContainerSelector";
+import ContainerDetails from "./ContainerDetails";
 
-export default function Dashboard() {
-  const location = {
-    lat: 40.7128, // New York example
-    lon: -74.006,
-  };
+interface DashboardProps {
+  containers: ContainerData[];
+}
+
+export default function Dashboard({ containers }: DashboardProps) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const selectedContainer = containers[selectedIndex];
 
   return (
-    <div>
-      <h1>Supply Chain Dashboard</h1>
-      <Map location={location} />
-      {/* You can add charts and additional UI elements here */}
-    </div>
+    <Box>
+      {/* Title / Description could be handled in your DashboardPage, or here */}
+      <Typography variant="h5" sx={{ fontWeight: "bold", mb: 2 }}>
+        Container Overview
+      </Typography>
+      <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+        Select a container to view its location and shipping details.
+      </Typography>
+
+      {/* 1) Selector of containers */}
+      <ContainerSelector
+        containers={containers}
+        selectedIndex={selectedIndex}
+        onSelect={setSelectedIndex}
+      />
+
+      {/* 2) Container Details (Map, Chart, Info) - wrapped in Paper for a card look */}
+      <Paper sx={{ mt: 3, p: 2 }} elevation={3}>
+        <ContainerDetails container={selectedContainer} />
+      </Paper>
+    </Box>
   );
 }
