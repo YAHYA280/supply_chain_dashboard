@@ -6,3 +6,4 @@ export interface SensorData {
     lon: number;
   };
 }
+//test
