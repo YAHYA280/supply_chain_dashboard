@@ -40,25 +40,31 @@ export default function HomePage() {
         <Box component="ul" sx={{ pl: 3, mt: 1 }}>
           <li>
             <Typography variant="body1">
-              <strong>Yahya Elmokhtari</strong> - FrontEnd
+              <strong>Yahya Elmokhtari</strong>
             </Typography>
           </li>
           <li>
             <Typography variant="body1">
-              <strong>Souhail ELMAHDANI</strong> - Blockchain
+              <strong>Souhail ELMAHDANI</strong> 
             </Typography>
           </li>
           <li>
             <Typography variant="body1">
-              <strong>Yassin Riahi</strong> - Back End
+              <strong>Yassin Riahi</strong> 
             </Typography>
           </li>
           <li>
             <Typography variant="body1">
-              <strong>Amin Boulzmin</strong> - IoT and Sensors
+              <strong>Amin Boulzmin</strong> 
             </Typography>
           </li>
+          
         </Box>
+           <Typography variant="h5" component="h2" fontWeight="bold" gutterBottom>
+              Supervised by : Dr . Abdelhalim HNINI
+           </Typography>
+
+
       </Box>
     </Container>
   );
